@@ -1,0 +1,146 @@
+Pragmatic Javascript - Asynchronicity, modularity and validation
+
+Is Pragmatic the right word?
+When I prepared the title for this talk, I was hoping to paint a picture of
+developing with a coherent process, systematic analisys and testing to reduce
+the risk of bugs, the stuff that the tech team does every day.
+
+Pragmatic is a nice word, don't get me wrong. But for me it paints a picture
+of shipping on time with the features the user needs and no extra fluff.
+
+Idiomatic is another word I considered but idiomatic is about using the
+the idiums which are common among people who use that language. Idiomatic
+programming insures everyone's code looks reasonably similar and is more
+easily read but the dark side of idiomatic programming is a sort of hazing
+ritual. People say things like "anyone who uses a for loop instead of .each
+is not a Real Ruby Programmer" which creates a climate of fear, suppressing
+creativity. Good or bad, Idiomatic is not the word I wanted.
+
+Quality is a word which I hadn't considered but should have. It's mainly what
+I'm aiming for. Quality Javascript, Javascript which can be used in production
+and is solid and maintainable. Javascript which makes you proud.
+
+Pragmatism and Quality are both necessary for a successful project, for
+quality you have to accept a certain amount of fluff while pragmatism is
+all about minimizing the fluff and delivering the goods. I could give a
+whole talk about Pragmatism but it wouldn't be much help. We can teach you
+all about tools for improving Quality but Pragmatism is something we just
+have to hope you'll pick up on your own.
+
+So Quality Javascript it is.
+
+
+Javascript Myths
+
+Javascript is loosely defined and unpredictable
+-When Microsoft IE had the majority of market share, this was more true.
+-The Document Object Model APIs are less standardized than Javascript itself.
+-Libraries like jQuery help with incompatibilities.
+-As Google Chrome gains ground, standardization is becoming the rule.
+ 
+Dynamically typed languages can't be used for serious projects.
+-Plenty of major web projects have been done in Perl, Python and Ruby.
+-Erlang is a dynamically typed language.
+-It's easy to say "we hold ourselves to the highest possible standards"
+-High standards cost money, are you developing an airplane control system?
+-Will people die if there is a bug?
+-It's tempting to get into holy wars, I'm as succeptable as anyone.
+
+Varient #2: Any serious project in Javascript must use GWT.
+-Gmail? Google Maps? Google Docs?
+-GWT apps are not able to take advantage of many of the Javascript tools.
+-Static typing in Java protects you from some classes of bugs.
+-Abstraction makes many classes of bugs difficult to debug.
+-GWT build time is poor.
+-GWT apps have a few second startup time.
+
+Javascript Is Not Object-Orientated
+-Java forces a particular type of OOP on the developer.
+-Javascript is Prototype based OOP, more flexible than Java, you choose a model.
+-OOP, functional programming, Prototype based programming.
+-Each paradigm excells in a different context.
+
+Javascript Lacks Tools
+-Once upon a time.
+-V8 Changed Everything.
+
+Javascript Facts
+
+Javascript Is Not Strict
+-Languages like Java, Python and Go will fail with errors.
+-Javascript, PHP and Perl will attempt to guess what you meant to do.
+-These assumptions are well standardized.
+-Sometimes these assumptions prevent bugs, eg: NPE
+-Where the language has to make an assumption there might be a bug.
+
+Totally invalid code will only be discovered when executed
+-Some bugs are universal. String s = null; s.toString();
+-Some bugs are caught by static typing.
+-If a variable doesn't exist the browser assumes it will exist later.
+-Passing arguments in the wrong order.
+-Refactoring can be painful.
+
+Javascript is not modular
+-One global namespace.
+-Nobody wants to constantly type jQuery so $ aliases jQuery.
+-$ also aliases Prototype.
+-Javascript files must be executed one at a time.
+
+Javascript code requires a seperate testing infrastructure
+-This does *not* mean you need to test everything with selenium.
+
+
+Introducing Closure Compiler
+-The most advanced minification/validation tool available
+-Built on top of Rhino, actually runs the code looking for bugs
+-Annotations allow static typing... when you want it
+-Constant folding to improve performance
+-Dead code elimination - exported symbols must be annotated!
+-Used on major projects such as Gmail and video.js
+
+Using Closure Compiler
+-Play and get a feel for it: http://closure-compiler.appspot.com/
+-Learn the Annotaions: https://developers.google.com/closure/compiler/docs/js-for-compiler
+-wget http://closure-compiler.googlecode.com/files/compiler-latest.zip
+-java -jar compiler.jar --help <-- looks like the GCC man page!
+
+But Slow!
+-4 seconds to compile a trivial hello world example
+-9 seconds to compile jQuery (9807 lines)
+-2k LoC/sec + 4 second startup cost.
+-This certainly isn't GCC
+-Affordable as long as projects stay centralized, small modules are bad.
+
+Closure Compiler In Maven
+-No official Maven plugin for running Closure
+-Everybody Wrote their own
+-Everybody Got it Wrong
+-github.com/samaxes/minify-maven-plugin - doesn't run the all important quality checks
+-github.com/gli/closure-compiler-maven-plugin/ - Same
+-github.com/mdasberg/maven-closure-compiler-plugin - No way to fail the build
+-github.com/jlgrock/ClosureJavascriptFramework - Forces you to use Google's js library
+-code.google.com/p/closure-compiler-maven-plugin/ - Must specify input js files manually, smells
+
+Fork Time
+-https://github.com/mdasberg/maven-closure-compiler-plugin Cleverly Built
+-Plugin calls Closure with traditional command line options
+-Works with most recent version of Closure
+-Multiple compilations runs in the same JVM process by hooking the exit function
+-All we have to do is allow arbitrary command line options to be passed from Maven
+-github.com/cjdelisle/maven-closure-compiler-plugin
+
+
+
+-Most javascript is built using Grunt, integrating with Maven adds cost.
+
+java -jar compiler.jar --use_types_for_optimization --compilation_level=ADVANCED_OPTIMIZATIONS --js=./hello.js --js_output_file=out.js --jscomp_error=accessControls --jscomp_error=ambiguousFunctionDecl --jscomp_error=checkRegExp --jscomp_error=checkStructDictInheritance --jscomp_error=checkTypes --jscomp_error=checkVars --jscomp_error=const --jscomp_error=constantProperty --jscomp_error=deprecated --jscomp_error=duplicateMessage --jscomp_error=es5Strict --jscomp_error=externsValidation --jscomp_error=fileoverviewTags --jscomp_error=globalThis --jscomp_error=internetExplorerChecks --jscomp_error=invalidCasts --jscomp_error=misplacedTypeAnnotation --jscomp_error=missingProperties --jscomp_error=missingReturn --jscomp_error=nonStandardJsDocs --jscomp_error=reportUnknownTypes --jscomp_error=suspiciousCode --jscomp_error=strictModuleDepCheck --jscomp_error=typeInvalidation --jscomp_error=undefinedNames --jscomp_error=undefinedVars --jscomp_error=unknownDefines --jscomp_error=uselessCode --jscomp_error=visibility
+
+
+
+
+
+
+
+Closure Compiler is not perfect
+-If a symbol is missing, it assumes that it will be a global at runtime
+-Typos will still lead to broken codepaths

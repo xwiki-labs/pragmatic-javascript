@@ -1,0 +1,112 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>cjd</groupId>
+  <artifactId>hello-closure-compiler</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+
+  <properties>
+    <jsframework.version>1.16.1</jsframework.version>
+  </properties>
+
+  <build>
+
+    <plugins>
+
+      <!-- Create the output directory -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.4</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <configuration>
+
+              <tasks>
+                <echo message="Creating js output directory"/>
+                <mkdir dir="./target/closure-compiler-output"/>
+              </tasks>
+
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Run the closure compiler -->
+      <plugin>
+        <groupId>com.dasberg.maven.plugins</groupId>
+        <artifactId>maven-closure-compiler-plugin</artifactId>
+        <version>1.0.2-SNAPSHOT</version>
+        <configuration>
+          <compilation_level>ADVANCED_OPTIMIZATIONS</compilation_level>
+          <js_dir>src/main/js</js_dir>
+          <js_output_dir>target/closure-compiler-output/</js_output_dir>
+          <args>
+            <!-- -Wall -Wextra -Werror -pedantic -turn-on-all-the-checks -->
+            <arg>--jscomp_error=accessControls</arg>
+            <arg>--jscomp_error=ambiguousFunctionDecl</arg>
+            <arg>--jscomp_error=checkRegExp</arg>
+            <arg>--jscomp_error=checkStructDictInheritance</arg>
+            <arg>--jscomp_error=checkTypes</arg>
+            <arg>--jscomp_error=checkVars</arg>
+            <arg>--jscomp_error=const</arg>
+            <arg>--jscomp_error=constantProperty</arg>
+            <arg>--jscomp_error=deprecated</arg>
+            <arg>--jscomp_error=duplicateMessage</arg>
+            <arg>--jscomp_error=es5Strict</arg>
+            <arg>--jscomp_error=externsValidation</arg>
+            <arg>--jscomp_error=fileoverviewTags</arg>
+            <arg>--jscomp_error=globalThis</arg>
+            <arg>--jscomp_error=internetExplorerChecks</arg>
+            <arg>--jscomp_error=invalidCasts</arg>
+            <arg>--jscomp_error=misplacedTypeAnnotation</arg>
+            <arg>--jscomp_error=missingProperties</arg>
+            <arg>--jscomp_error=missingReturn</arg>
+            <arg>--jscomp_error=nonStandardJsDocs</arg>
+            <arg>--jscomp_error=reportUnknownTypes</arg>
+            <arg>--jscomp_error=suspiciousCode</arg>
+            <arg>--jscomp_error=strictModuleDepCheck</arg>
+            <arg>--jscomp_error=typeInvalidation</arg>
+            <arg>--jscomp_error=undefinedNames</arg>
+            <arg>--jscomp_error=undefinedVars</arg>
+            <arg>--jscomp_error=unknownDefines</arg>
+            <arg>--jscomp_error=uselessCode</arg>
+            <arg>--jscomp_error=visibility</arg>
+            <arg>--warning_level=VERBOSE</arg>
+          </args>
+        </configuration>
+        <executions>
+          <execution>
+            <id>compile-js</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>com.google.javascript</groupId>
+            <artifactId>closure-compiler</artifactId>
+            <version>v20130603</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+
+    <!-- Package up the output files -->
+    <resources>
+      <resource>
+        <directory>${basedir}/target/closure-compiler-output</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>**/*.js</include>
+        </includes>
+      </resource>
+    </resources>
+
+  </build>
+
+</project>
