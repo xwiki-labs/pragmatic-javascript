@@ -1,0 +1,17 @@
+<html>
+<head>
+<script src="http://requirejs.org/docs/release/2.1.6/minified/require.js"></script>
+<script>
+require.config({
+  paths: {
+    jquery: "http://code.jquery.com/jquery-1.10.2.min"
+  }
+});
+</script>
+<script>
+define("hello",["jquery"],function(e){return function(t){e(t).html("<p>Hello AMD!</p>")}}),define("main",["jquery","hello"],function(e,t){e(function(){t(e("body"))})});
+require(['main'], function() {});
+define("main", [], function() {});
+</script></head>
+<body></body>
+</html>

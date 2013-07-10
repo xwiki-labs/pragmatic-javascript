@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Qunit test</title>
+  <link rel="stylesheet" href="qunit-1.12.0.css" />
+</head>
+<body>
+  <div id="qunit"></div>
+  <script type="text/javascript" src="qunit-1.12.0.js"></script>
+  <script src="require.js"></script>
+  <script type="text/javascript">
+QUnit.config.autostart = false;
+require.config({
+  paths: {
+    'main': '../../../target/requirejs-config/hello-amd-0.1.0-SNAPSHOT',
+    'test': '../../../src/test/js/test'
+  }
+});
+require(['test']);
+  </script>
+</body>
+</html>

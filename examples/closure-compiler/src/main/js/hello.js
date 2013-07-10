@@ -1,6 +1,6 @@
 /**
-* @param {string} name
-*/
+ * @param {string} name
+ */
 var hello = function(name) {
   alert('Hello, ' + name);
 };
